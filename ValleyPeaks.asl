@@ -1,27 +1,27 @@
 state("ValleyPeaks")
 {
-    int yaxis: "UnityPlayer.dll", 0x01A664D0, 0xA8, 0x0, 0x20, 0x28, 0x154;
+    int yaxis: "UnityPlayer.dll", 0x01A11D80, 0x30, 0x78, 0x78, 0x0, 0x88, 0xC4;
     int radios: "mono-2.0-bdwgc.dll", 0x7280F8, 0x90, 0xA20, 0x90, 0x64, 0x18;
     int stamps: "mono-2.0-bdwgc.dll", 0x728078, 0x440, 0x3C0, 0x7E0, 0x0, 0x0, 0xD4C;
 }
 
 init
 {
-    vars.fst = true;
-    vars.sst = true;
+    vars.first1 = true;
+    vars.first2 = true;
     vars.gameRestart = true;
     vars.load = false;
 }
 
 startup
 {
-    settings.Add("splitStamps", true, "Split on Stamp Cards");
-    settings.Add("splitRadio", false, "Split on radios");
+    settings.Add("splitStamps", true, "All tickets and Radios%");
+    settings.Add("splitRadio", false, "End%");
 }
 
 start
 {
-    if (old.yaxis > current.yaxis)
+    if (old.yaxis != current.yaxis)
     {
         return true;
     }
@@ -60,9 +60,9 @@ split
     if (settings["splitStamps"])
     {
        
-        if (old.stamps == 2 && current.stamps == 3 && vars.fst)
+        if (old.stamps == 2 && current.stamps == 3 && vars.first1)
         {
-            vars.fst = false;
+            vars.first1 = false;
             print("split1" + old.stamps.ToString() + current.stamps.ToString());
             return true;
         }
@@ -85,9 +85,9 @@ split
 
     if (settings["splitRadio"])
     {
-        if (old.radios == 0 && current.radios == 1 && vars.sst)
+        if (old.radios == 0 && current.radios == 1 && vars.first2)
         {
-            vars.sst = false;
+            vars.first2 = false;
            return true;
         }
         if (old.radios == 0 && current.radios == 1)
@@ -98,7 +98,7 @@ split
         {
            return true;
         }
-        if (old.radios == 2 && current.radios == 3)
+        if (current.radios == 3)
         {
            return true;
         }
