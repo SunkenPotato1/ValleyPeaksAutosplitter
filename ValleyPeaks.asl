@@ -1,6 +1,6 @@
 state("ValleyPeaks")
 {
-    int yaxis: "UnityPlayer.dll", 0x01A11D80, 0x30, 0x78, 0x78, 0x0, 0x88, 0xC4;
+    int yaxis: "UnityPlayer.dll", 0x01AD60D0, 0x0, 0x70, 0x40, 0x30, 0x38, 0x60, 0x154;
     int radios: "mono-2.0-bdwgc.dll", 0x7280F8, 0x90, 0xA20, 0x90, 0x64, 0x18;
     int stamps: "mono-2.0-bdwgc.dll", 0x728078, 0x440, 0x3C0, 0x7E0, 0x0, 0x0, 0xD4C;
 }
@@ -11,17 +11,38 @@ init
     vars.first2 = true;
     vars.gameRestart = true;
     vars.load = false;
+    vars.glitched = true;
 }
 
 startup
 {
-    settings.Add("splitStamps", true, "All tickets and Radios%");
-    settings.Add("splitRadio", false, "End%");
+    //all tickets glitchless
+    settings.Add("allticketsl", true, "All tickets% without skipping tutorial");
+        settings.Add("card0l", true, "Tutorial card", "allticketsl");
+        settings.Add("card1l", true, "1st card", "allticketsl");
+        settings.Add("card2l", true, "2nd card", "allticketsl");
+        settings.Add("card3l", true, "3rd card", "allticketsl");
+    //all tickets with glitches
+    settings.Add("allticketsw", false, "All tickets% with skipping tutorial");
+        settings.Add("card1w", false, "1st card", "allticketsw");
+        settings.Add("card2w", false, "2nd card", "allticketsw");
+        settings.Add("card3w", false, "3rd card", "allticketsw");
+    //end% glitchless
+    settings.Add("endl", false, "End% without skipping tutorial");
+        settings.Add("radio0l", false, "Tutorial Radio", "endl");
+        settings.Add("radio1l", false, "Tutorial Radio", "endl");
+        settings.Add("radio2l", false, "Tutorial Radio", "endl");
+        settings.Add("radio3l", false, "Tutorial Radio", "endl");
+    //end% with glitches
+        settings.Add("endw", false, "End% with skipping tutorial");
+        settings.Add("radio1w", false, "Tutorial Radio", "endw");
+        settings.Add("radio2w", false, "Tutorial Radio", "endw");
+        settings.Add("radio3w", false, "Tutorial Radio", "endw");
 }
 
 start
 {
-    if (old.yaxis != current.yaxis)
+    if (current.yaxis != 0)
     {
         return true;
     }
@@ -29,7 +50,7 @@ start
 
 update
 {
-    if (old.yaxis != current.yaxis)
+    if (old.yaxis > current.yaxis)
     {
         vars.load = false;
     }
@@ -38,13 +59,16 @@ update
         
         vars.load = true;
     }
+    if (old.stamps == 3 && current.stamps == 0)
+    {
+        vars.glitched = false;
+    }
 }
 
 isLoading
 {
     if (vars.load == true)
     {
-        print("Is loading " + current.yaxis.ToString());
         return true;
     }
     else
@@ -57,50 +81,102 @@ isLoading
 
 split
 {
-    if (settings["splitStamps"])
+    // all tickets glitchless
+    if (settings["allticketsl"])
     {
        
-        if (old.stamps == 2 && current.stamps == 3 && vars.first1)
+        if (old.stamps == 2 && current.stamps == 3 && vars.first1 && settings["card0l"])
         {
             vars.first1 = false;
-            print("split1" + old.stamps.ToString() + current.stamps.ToString());
             return true;
         }
-        if (old.stamps == 2 && current.stamps == 3)
-        {
-            print("split2" + old.stamps.ToString() + current.stamps.ToString());
-           return true;
+        if (vars.glitched == false)
+        {       
+            if (old.stamps == 2 && current.stamps == 3 && settings["card1l"])
+            {
+                return true;
+            }
+            if (old.stamps == 5 && current.stamps == 6 && settings["card2l"])
+            {
+                return true;
+            }
+            if (current.stamps >= 9 && current.radios >= 3 && settings["card3l"])
+            {
+                return true;
+            }
         }
-        if (old.stamps == 5 && current.stamps == 6)
-        {
-            print("split3" + old.stamps.ToString() + current.stamps.ToString());
-           return true;
+        if (vars.glitched == true)
+        {       
+            if (old.stamps == 5 && current.stamps == 6 && settings["card1l"])
+            {
+                return true;
+            }
+            if (old.stamps == 8 && current.stamps == 9 && settings["card2l"])
+            {
+                return true;
+            }
+            if (current.stamps == 12 && current.radios >= 3 && settings["card3l"])
+            {
+                return true;
+            }
         }
-        if (current.stamps == 9 && current.radios == 3)
+        
+    }
+
+    // all tickets with glitches
+    if (settings["allticketsw"])
+    {
+        if (old.stamps == 2 && current.stamps == 3 && settings["card1w"])
         {
-            print("split4" + old.stamps.ToString() + current.stamps.ToString());
-           return true;
+            return true;
+        }
+        if (old.stamps == 5 && current.stamps == 6 && settings["card2w"])
+        {
+            return true;
+        }
+        if (current.stamps >= 9 && current.radios >= 3 && settings["card3w"])
+        {
+            return true;
         }
     }
 
-    if (settings["splitRadio"])
+    
+    //end% glitchless
+    if (settings["endl"])
     {
-        if (old.radios == 0 && current.radios == 1 && vars.first2)
+        if (old.radios == 0 && current.radios == 1 && vars.first2 && settings["radio0l"])
         {
             vars.first2 = false;
-           return true;
+            return true;
         }
-        if (old.radios == 0 && current.radios == 1)
+        if (old.radios == 0 && current.radios == 1 && settings["radio1l"])
         {
-           return true;
+            return true;
+        } 
+        if (old.radios == 1 && current.radios == 2 && settings["radio2l"])
+        {
+            return true;
         }
-        if (old.radios == 1 && current.radios == 2)
+        if (current.radios >= 3 && settings["radio3l"])
         {
-           return true;
+            return true;
         }
-        if (current.radios == 3)
+    }
+
+    // end% with glitches
+    if (settings["endw"])
+    {
+        if (old.radios == 0 && current.radios == 1 && settings["radio1w"])
         {
-           return true;
+            return true;
+        } 
+        if (old.radios == 1 && current.radios == 2 && settings["radio2w"])
+        {
+            return true;
+        }
+        if (current.radios >= 3 && settings["radio3w"])
+        {
+            return true;
         }
     }
 }
