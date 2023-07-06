@@ -2,7 +2,9 @@
 
 ## Features
  - Automatic load time removal
- - Splitting for Any% and All tickets 
+ - Splitting for Any% and All tickets
+   - Both have 4 splits in total
+ 
 
 ## Setup
 1. Download the .asl file and install Livesplit (https://livesplit.org/downloads/)
