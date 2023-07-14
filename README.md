@@ -3,7 +3,6 @@
 ## Features
  - Automatic load time removal
  - Splitting for Any% and All tickets
-   - Both have 4 splits in total
  
 
 ## Setup

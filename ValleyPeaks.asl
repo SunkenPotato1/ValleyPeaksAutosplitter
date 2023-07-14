@@ -1,8 +1,8 @@
 state("ValleyPeaks")
 {
     int yaxis: "UnityPlayer.dll", 0x01AD60D0, 0x0, 0x70, 0x40, 0x30, 0x38, 0x60, 0x154;
-    int radios: "mono-2.0-bdwgc.dll", 0x7280F8, 0x90, 0xA20, 0x90, 0x64, 0x18;
-    int stamps: "mono-2.0-bdwgc.dll", 0x728078, 0x440, 0x3C0, 0x7E0, 0x0, 0x0, 0xD4C;
+    int radios: "mono-2.0-bdwgc.dll", 0x7280F8, 0x90, 0xA20, 0x90, 0x64, 0x16;
+    int stamps: "mono-2.0-bdwgc.dll", 0x007280F8, 0x90, 0xA20, 0x90, 0x64, 0x14;
 }
 
 init
@@ -30,14 +30,14 @@ startup
     //end% glitchless
     settings.Add("endl", false, "End% without skipping tutorial");
         settings.Add("radio0l", false, "Tutorial Radio", "endl");
-        settings.Add("radio1l", false, "Tutorial Radio", "endl");
-        settings.Add("radio2l", false, "Tutorial Radio", "endl");
-        settings.Add("radio3l", false, "Tutorial Radio", "endl");
+        settings.Add("radio1l", false, "1st Radio", "endl");
+        settings.Add("radio2l", false, "2nd Radio", "endl");
+        settings.Add("radio3l", false, "3rd Radio", "endl");
     //end% with glitches
         settings.Add("endw", false, "End% with skipping tutorial");
-        settings.Add("radio1w", false, "Tutorial Radio", "endw");
-        settings.Add("radio2w", false, "Tutorial Radio", "endw");
-        settings.Add("radio3w", false, "Tutorial Radio", "endw");
+        settings.Add("radio1w", false, "1st Radio", "endw");
+        settings.Add("radio2w", false, "2nd Radio", "endw");
+        settings.Add("radio3w", false, "3rd Radio", "endw");
 }
 
 start
@@ -63,6 +63,7 @@ update
     {
         vars.glitched = false;
     }
+    print(current.stamps.ToString() + vars.first1.ToString());
 }
 
 isLoading
@@ -100,7 +101,7 @@ split
             {
                 return true;
             }
-            if (current.stamps >= 9 && current.radios >= 3 && settings["card3l"])
+            if (current.stamps >= 9  && settings["card3l"])
             {
                 return true;
             }
@@ -115,7 +116,7 @@ split
             {
                 return true;
             }
-            if (current.stamps == 12 && current.radios >= 3 && settings["card3l"])
+            if (current.stamps >= 12 && settings["card3l"])
             {
                 return true;
             }
@@ -134,7 +135,7 @@ split
         {
             return true;
         }
-        if (current.stamps >= 9 && current.radios >= 3 && settings["card3w"])
+        if (current.stamps >= 9 && settings["card3w"])
         {
             return true;
         }
