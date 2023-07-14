@@ -2,7 +2,7 @@
 
 ## Features
  - Automatic load time removal
- - Splitting for Any% and All tickets
+ - Configurable splits for Any% and All tickets
  
 
 ## Setup
