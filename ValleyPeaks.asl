@@ -63,7 +63,6 @@ update
     {
         vars.glitched = false;
     }
-    print(current.stamps.ToString() + vars.first1.ToString());
 }
 
 isLoading
