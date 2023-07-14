@@ -6,7 +6,7 @@
  
 
 ## Setup
-1. Download the .asl file and install Livesplit (https://livesplit.org/downloads/)
+1. Download the .asl file from releases and install Livesplit (https://livesplit.org/downloads/)
 2. Open Livesplit and right click on the timer and select edit layout
 3. Press the plus icon and select Scriptable Auto Splitter
 4. Double click on the Scriptable Auto Splitter and open it
