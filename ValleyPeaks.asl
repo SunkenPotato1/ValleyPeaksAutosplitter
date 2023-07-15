@@ -50,19 +50,28 @@ start
 
 update
 {
+    //when you start falling loading stops
     if (old.yaxis > current.yaxis)
     {
         vars.load = false;
     }
+    //0 here is == null and when game is loading y pos is null
     if (current.yaxis == 0)
     {
-        
         vars.load = true;
     }
+    //if stamps get reset properly set glitched var to false
     if (old.stamps == 3 && current.stamps == 0)
     {
         vars.glitched = false;
     }
+    // if memory return null for a bit (idk why) fix the glitched state
+    if (old.stamps == 0 && current.stamps == 3)
+    {
+        vars.glitched = true;
+    }
+    //debugging
+    //print(current.stamps.ToString() + ' ' + vars.glitched);
 }
 
 isLoading
@@ -75,6 +84,8 @@ isLoading
     {
         return false;
     }
+    //debugging
+    //print(vars.load);
 }
 
 
@@ -84,12 +95,13 @@ split
     // all tickets glitchless
     if (settings["allticketsl"])
     {
-       
+        //only allow splitting on tutorial card
         if (old.stamps == 2 && current.stamps == 3 && vars.first1 && settings["card0l"])
         {
             vars.first1 = false;
             return true;
         }
+        //if stamps get reset properly when loading
         if (vars.glitched == false)
         {       
             if (old.stamps == 2 && current.stamps == 3 && settings["card1l"])
@@ -105,6 +117,7 @@ split
                 return true;
             }
         }
+        //if stamps dont get reset properly and stay at 3
         if (vars.glitched == true)
         {       
             if (old.stamps == 5 && current.stamps == 6 && settings["card1l"])
@@ -123,7 +136,7 @@ split
         
     }
 
-    // all tickets with glitches
+    // all tickets skipping the tutorial
     if (settings["allticketsw"])
     {
         if (old.stamps == 2 && current.stamps == 3 && settings["card1w"])
@@ -141,7 +154,7 @@ split
     }
 
     
-    //end% glitchless
+    //end% glitchless/without skipping tutorial
     if (settings["endl"])
     {
         if (old.radios == 0 && current.radios == 1 && vars.first2 && settings["radio0l"])
@@ -163,7 +176,7 @@ split
         }
     }
 
-    // end% with glitches
+    // end% with glitches/skipping tutorial
     if (settings["endw"])
     {
         if (old.radios == 0 && current.radios == 1 && settings["radio1w"])
@@ -183,6 +196,9 @@ split
 
 reset
 {
+    //on load reset game time
+    //NOTE: wont work if you had a gold time,
+    //i think you have to remove warn before reseting in livesplit
     if (vars.gameRestart)
     {
         vars.gameRestart = false;
