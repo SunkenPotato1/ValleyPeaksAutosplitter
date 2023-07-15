@@ -112,7 +112,7 @@ split
             {
                 return true;
             }
-            if (current.stamps >= 9  && settings["card3l"])
+            if (old.stamps == 8 && current.stamps == 9  && settings["card3l"])
             {
                 return true;
             }
@@ -128,7 +128,7 @@ split
             {
                 return true;
             }
-            if (current.stamps >= 12 && settings["card3l"])
+            if (old.stamps == 11 && current.stamps == 12 && settings["card3l"])
             {
                 return true;
             }
@@ -147,7 +147,7 @@ split
         {
             return true;
         }
-        if (current.stamps >= 9 && settings["card3w"])
+        if (old.stamps == 8 && current.stamps == 9 && settings["card3w"])
         {
             return true;
         }
@@ -170,7 +170,7 @@ split
         {
             return true;
         }
-        if (current.radios >= 3 && settings["radio3l"])
+        if (old.radios == 2 && current.radios == 3 && settings["radio3l"])
         {
             return true;
         }
@@ -187,7 +187,7 @@ split
         {
             return true;
         }
-        if (current.radios >= 3 && settings["radio3w"])
+        if (old.radios == 2 && current.radios == 3 && settings["radio3w"])
         {
             return true;
         }
