@@ -1,7 +1,7 @@
 state("ValleyPeaks")
 {
     int yaxis: "UnityPlayer.dll", 0x01AD60D0, 0x0, 0x70, 0x40, 0x30, 0x38, 0x60, 0x154;
-    int radios: "mono-2.0-bdwgc.dll", 0x7280F8, 0x90, 0xA20, 0x90, 0x64, 0x16;
+    int radios: "mono-2.0-bdwgc.dll", 0x00752478, 0x3C0, 0x7E0, 0x810;
     int stamps: "mono-2.0-bdwgc.dll", 0x007280F8, 0x90, 0xA20, 0x90, 0x64, 0x14;
 }
 
@@ -60,18 +60,19 @@ update
     {
         vars.load = true;
     }
-    //if stamps get reset properly set glitched var to false
+    //if stamps get reset properly after the tutorial set glitched var to false so that the autosplitter knows if to start at 3 or 0
     if (old.stamps == 3 && current.stamps == 0)
     {
         vars.glitched = false;
-    }
-    // if memory return null for a bit (idk why) fix the glitched state
+    } 
+    // if memory return null/0 for a bit (idk why) fix the glitched state
     if (old.stamps == 0 && current.stamps == 3)
     {
         vars.glitched = true;
     }
-    //debugging
+    //DEBUG
     //print(current.stamps.ToString() + ' ' + vars.glitched);
+    
 }
 
 isLoading
@@ -84,7 +85,7 @@ isLoading
     {
         return false;
     }
-    //debugging
+    //DEBUG
     //print(vars.load);
 }
 
@@ -159,19 +160,35 @@ split
     {
         if (old.radios == 0 && current.radios == 1 && vars.first2 && settings["radio0l"])
         {
+            // change it to false to only allow this if statement to be true once
             vars.first2 = false;
+            //DEBUG
+            //print("first");
+            //print(current.radios.ToString());
+            //print(old.radios.ToString());
             return true;
         }
         if (old.radios == 0 && current.radios == 1 && settings["radio1l"])
         {
+            //DEBUG
+            //print("second");
+            //print(current.radios.ToString());
+            //print(old.radios.ToString());
             return true;
         } 
         if (old.radios == 1 && current.radios == 2 && settings["radio2l"])
         {
+            //DEBUG
+            //print("third");
+            //print(current.radios.ToString());
+            //print(old.radios.ToString());
             return true;
         }
         if (old.radios == 2 && current.radios == 3 && settings["radio3l"])
         {
+            //DEBUG
+            //print(current.radios.ToString());
+            //print(old.radios.ToString());
             return true;
         }
     }
