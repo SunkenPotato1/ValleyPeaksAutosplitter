@@ -16,24 +16,26 @@ init
 
 startup
 {
-    //all tickets glitchless
+    // Initializes the settings page in LiveSplit
+
+    //Settings for all tickets glitchless
     settings.Add("allticketsl", true, "All tickets% without skipping tutorial");
         settings.Add("card0l", true, "Tutorial card", "allticketsl");
         settings.Add("card1l", true, "1st card", "allticketsl");
         settings.Add("card2l", true, "2nd card", "allticketsl");
         settings.Add("card3l", true, "3rd card", "allticketsl");
-    //all tickets with glitches
+    //Settings for all tickets with glitches
     settings.Add("allticketsw", false, "All tickets% with skipping tutorial");
         settings.Add("card1w", false, "1st card", "allticketsw");
         settings.Add("card2w", false, "2nd card", "allticketsw");
         settings.Add("card3w", false, "3rd card", "allticketsw");
-    //end% glitchless
+    //Settings for end% glitchless
     settings.Add("endl", false, "End% without skipping tutorial");
         settings.Add("radio0l", false, "Tutorial Radio", "endl");
         settings.Add("radio1l", false, "1st Radio", "endl");
         settings.Add("radio2l", false, "2nd Radio", "endl");
         settings.Add("radio3l", false, "3rd Radio", "endl");
-    //end% with glitches
+    //Settings for end% with glitches
         settings.Add("endw", false, "End% with skipping tutorial");
         settings.Add("radio1w", false, "1st Radio", "endw");
         settings.Add("radio2w", false, "2nd Radio", "endw");
@@ -42,6 +44,7 @@ startup
 
 start
 {
+    //start if players y position is not null (null == 0)
     if (current.yaxis != 0)
     {
         return true;
@@ -50,33 +53,40 @@ start
 
 update
 {
+    //this is ran every tick of LiveSplit
+
+    //When the player loads into the game, the position is above the ground
     //when you start falling loading stops
     if (old.yaxis > current.yaxis)
     {
         vars.load = false;
     }
-    //0 here is == null and when game is loading y pos is null
+    
+    //when the game is loading the y position is null/0 so set loading to true for load time removal
     if (current.yaxis == 0)
     {
         vars.load = true;
     }
+
+    //sometimes when loading out of the tutorial , the stamp counter doesnt get reset
     //if stamps get reset properly after the tutorial set glitched var to false so that the autosplitter knows if to start at 3 or 0
     if (old.stamps == 3 && current.stamps == 0)
     {
         vars.glitched = false;
     } 
+
     // if memory return null/0 for a bit (idk why) fix the glitched state
     if (old.stamps == 0 && current.stamps == 3)
     {
         vars.glitched = true;
     }
-    //DEBUG
-    //print(current.stamps.ToString() + ' ' + vars.glitched);
     
 }
 
 isLoading
 {
+    //is called by LiveSplit every tick to determin if to pause
+
     if (vars.load == true)
     {
         return true;
@@ -85,15 +95,16 @@ isLoading
     {
         return false;
     }
-    //DEBUG
-    //print(vars.load);
 }
 
 
 
 split
 {
-    // all tickets glitchless
+    //called every tick
+    //if returns true, Livesplit will split
+    
+    //splits for all tickets glitchless
     if (settings["allticketsl"])
     {
         //only allow splitting on tutorial card
@@ -102,7 +113,7 @@ split
             vars.first1 = false;
             return true;
         }
-        //if stamps get reset properly when loading
+        //spliting if stamps get reset properly when loading
         if (vars.glitched == false)
         {       
             if (old.stamps == 2 && current.stamps == 3 && settings["card1l"])
@@ -118,7 +129,7 @@ split
                 return true;
             }
         }
-        //if stamps dont get reset properly and stay at 3
+        //spliting if stamps dont get reset properly and stay at 3
         if (vars.glitched == true)
         {       
             if (old.stamps == 5 && current.stamps == 6 && settings["card1l"])
@@ -137,7 +148,7 @@ split
         
     }
 
-    // all tickets skipping the tutorial
+    //splits for all tickets with skipping the tutorial
     if (settings["allticketsw"])
     {
         if (old.stamps == 2 && current.stamps == 3 && settings["card1w"])
@@ -155,45 +166,30 @@ split
     }
 
     
-    //end% glitchless/without skipping tutorial
+    //splits for end% glitchless/without skipping tutorial
     if (settings["endl"])
     {
         if (old.radios == 0 && current.radios == 1 && vars.first2 && settings["radio0l"])
         {
             // change it to false to only allow this if statement to be true once
             vars.first2 = false;
-            //DEBUG
-            //print("first");
-            //print(current.radios.ToString());
-            //print(old.radios.ToString());
             return true;
         }
         if (old.radios == 0 && current.radios == 1 && settings["radio1l"])
         {
-            //DEBUG
-            //print("second");
-            //print(current.radios.ToString());
-            //print(old.radios.ToString());
             return true;
         } 
         if (old.radios == 1 && current.radios == 2 && settings["radio2l"])
         {
-            //DEBUG
-            //print("third");
-            //print(current.radios.ToString());
-            //print(old.radios.ToString());
             return true;
         }
         if (old.radios == 2 && current.radios == 3 && settings["radio3l"])
         {
-            //DEBUG
-            //print(current.radios.ToString());
-            //print(old.radios.ToString());
             return true;
         }
     }
 
-    // end% with glitches/skipping tutorial
+    //splits for end% with glitches/skipping tutorial
     if (settings["endw"])
     {
         if (old.radios == 0 && current.radios == 1 && settings["radio1w"])
@@ -213,9 +209,7 @@ split
 
 reset
 {
-    //on load reset game time
-    //NOTE: wont work if you had a gold time,
-    //i think you have to remove warn before reseting in livesplit
+    //on game start reset game time
     if (vars.gameRestart)
     {
         vars.gameRestart = false;
